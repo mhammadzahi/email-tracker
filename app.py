@@ -9,16 +9,13 @@ conn_str = os.getenv("CONN_STR")
 
 app = FastAPI()
 
-def get_db_connection():
-    return psycopg2.connect(conn_str)
-
 @app.get("/track/{email_id}.png")
 async def track_email(email_id: str, request: Request):
     ip = request.client.host
     user_agent = request.headers.get("user-agent", "unknown")
     timestamp = datetime.utcnow()
 
-    conn = get_db_connection()
+    conn = psycopg2.connect(conn_str)
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO email_tracking (email_id, ip_address, user_agent, timestamp)
