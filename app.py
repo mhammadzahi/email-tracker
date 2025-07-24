@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
-import psycopg2
 from datetime import datetime
 from dotenv import load_dotenv
-import os
+import psycopg2, os
 
 load_dotenv()
 conn_str = os.getenv("CONN_STR")
@@ -32,8 +31,12 @@ async def track_email(email_id: str, request: Request):
     return FileResponse("pixel.png", media_type="image/png")
 
 
+@app.get("/")
+async def root():
+    return {"message": "Email tracking service is running."}
+
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8008, reload=True)# dev
-    # uvicorn.run(app, host="0.0.0.0", port=8008)# prod
+    #uvicorn.run("app:app", host="0.0.0.0", port=8008, reload=True)# dev
+    uvicorn.run(app, host="0.0.0.0", port=8008)# prod
